@@ -16,8 +16,17 @@ import { getAppVersion } from '@server/utils/appVersion';
 import { getHostname } from '@server/utils/getHostname';
 import axios from 'axios';
 import { Router } from 'express';
+import rateLimit from 'express-rate-limit';
 import net from 'net';
 import validator from 'validator';
+
+const authRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { status: 429, error: 'Too many requests, please try again later.' },
+});
 
 const authRoutes = Router();
 
@@ -46,7 +55,7 @@ authRoutes.get('/me', isAuthenticated(), async (req, res) => {
   return res.status(200).json(user);
 });
 
-authRoutes.post('/plex', async (req, res, next) => {
+authRoutes.post('/plex', authRateLimit, async (req, res, next) => {
   const settings = getSettings();
   const userRepository = getRepository(User);
   const body = req.body as { authToken?: string };
@@ -223,7 +232,7 @@ function getUserAvatarUrl(user: User): string {
   return `/avatarproxy/${user.jellyfinUserId}?v=${user.avatarVersion}`;
 }
 
-authRoutes.post('/jellyfin', async (req, res, next) => {
+authRoutes.post('/jellyfin', authRateLimit, async (req, res, next) => {
   const settings = getSettings();
   const userRepository = getRepository(User);
   const body = req.body as {
@@ -593,7 +602,7 @@ authRoutes.post('/jellyfin', async (req, res, next) => {
   }
 });
 
-authRoutes.post('/local', async (req, res, next) => {
+authRoutes.post('/local', authRateLimit, async (req, res, next) => {
   const settings = getSettings();
   const userRepository = getRepository(User);
   const body = req.body as { email?: string; password?: string };
@@ -722,7 +731,7 @@ authRoutes.post('/logout', async (req, res, next) => {
   }
 });
 
-authRoutes.post('/reset-password', async (req, res, next) => {
+authRoutes.post('/reset-password', authRateLimit, async (req, res, next) => {
   const userRepository = getRepository(User);
   const body = req.body as { email?: string };
 
@@ -757,7 +766,7 @@ authRoutes.post('/reset-password', async (req, res, next) => {
   return res.status(200).json({ status: 'ok' });
 });
 
-authRoutes.post('/reset-password/:guid', async (req, res, next) => {
+authRoutes.post('/reset-password/:guid', authRateLimit, async (req, res, next) => {
   const userRepository = getRepository(User);
 
   if (!req.body.password || req.body.password?.length < 8) {

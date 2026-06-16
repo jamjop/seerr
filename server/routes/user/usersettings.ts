@@ -107,9 +107,9 @@ userSettingsRoutes.post<
       throw new ApiError(400, ApiErrorCode.InvalidEmail);
     }
 
-    // Update quota values only if the user has the correct permissions
+    // Update quota values only if the requester has manage-users permission
     if (
-      !user.hasPermission(Permission.MANAGE_USERS) &&
+      req.user?.hasPermission(Permission.MANAGE_USERS) &&
       req.user?.id !== user.id
     ) {
       user.movieQuotaDays = req.body.movieQuotaDays;

@@ -608,9 +608,9 @@ class Settings {
         },
       },
       network: {
-        csrfProtection: false,
+        csrfProtection: true,
         forceIpv4First: false,
-        trustProxy: false,
+        trustProxy: true,
         proxy: {
           enabled: false,
           hostname: '',

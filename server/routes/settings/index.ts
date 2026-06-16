@@ -34,6 +34,7 @@ import type { DnsEntries, DnsStats } from 'dns-caching';
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import fs from 'fs';
+import readline from 'readline';
 import { escapeRegExp, merge, omit, set, sortBy } from 'lodash';
 import { rescheduleJob } from 'node-schedule';
 import path from 'path';
@@ -538,7 +539,7 @@ settingsRoutes.get(
 settingsRoutes.get(
   '/logs',
   rateLimit({ windowMs: 60 * 1000, max: 50 }),
-  (req, res, next) => {
+  async (req, res, next) => {
     const pageSize = req.query.take ? Number(req.query.take) : 25;
     const skip = req.query.skip ? Number(req.query.skip) : 0;
     const search = (req.query.search as string) ?? '';
@@ -591,44 +592,47 @@ settingsRoutes.get(
     };
 
     try {
-      fs.readFileSync(logFile, 'utf-8')
-        .split('\n')
-        .forEach((line) => {
-          if (!line.length) return;
+      const rl = readline.createInterface({
+        input: fs.createReadStream(logFile),
+        crlfDelay: Infinity,
+      });
 
-          const logMessage = JSON.parse(line);
+      for await (const line of rl) {
+        if (!line.length) continue;
 
-          if (!filter.includes(logMessage.level)) {
-            return;
-          }
+        const logMessage = JSON.parse(line);
 
+        if (!filter.includes(logMessage.level)) {
+          continue;
+        }
+
+        if (
+          !Object.keys(logMessage).every((key) =>
+            logMessageProperties.includes(key)
+          )
+        ) {
+          Object.keys(logMessage)
+            .filter((prop) => !logMessageProperties.includes(prop))
+            .forEach((prop) => {
+              set(logMessage, `data.${prop}`, logMessage[prop]);
+            });
+        }
+
+        if (req.query.search) {
           if (
-            !Object.keys(logMessage).every((key) =>
-              logMessageProperties.includes(key)
+            // label and data are sometimes undefined
+            !searchRegexp.test(logMessage.label ?? '') &&
+            !searchRegexp.test(logMessage.message) &&
+            !deepValueStrings(logMessage.data ?? {}).some((val) =>
+              searchRegexp.test(val)
             )
           ) {
-            Object.keys(logMessage)
-              .filter((prop) => !logMessageProperties.includes(prop))
-              .forEach((prop) => {
-                set(logMessage, `data.${prop}`, logMessage[prop]);
-              });
+            continue;
           }
+        }
 
-          if (req.query.search) {
-            if (
-              // label and data are sometimes undefined
-              !searchRegexp.test(logMessage.label ?? '') &&
-              !searchRegexp.test(logMessage.message) &&
-              !deepValueStrings(logMessage.data ?? {}).some((val) =>
-                searchRegexp.test(val)
-              )
-            ) {
-              return;
-            }
-          }
-
-          logs.push(logMessage);
-        });
+        logs.push(logMessage);
+      }
 
       const displayedLogs = logs.reverse().slice(skip, skip + pageSize);
 

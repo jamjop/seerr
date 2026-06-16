@@ -5,6 +5,7 @@ import type {
   PermissionCheckOptions,
 } from '@server/lib/permissions';
 import { getSettings } from '@server/lib/settings';
+import logger from '@server/logger';
 
 export const checkUser: Middleware = async (req, _res, next) => {
   const settings = getSettings();
@@ -18,6 +19,13 @@ export const checkUser: Middleware = async (req, _res, next) => {
     // If a User ID is provided, we will act on that user's behalf
     if (req.header('X-API-User')) {
       userId = Number(req.header('X-API-User'));
+      logger.info('API key used to impersonate user', {
+        label: 'Auth',
+        userId,
+        ip: req.ip,
+        method: req.method,
+        path: req.path,
+      });
     }
 
     user = await userRepository.findOne({ where: { id: userId } });
