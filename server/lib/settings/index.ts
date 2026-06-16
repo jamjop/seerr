@@ -404,7 +404,7 @@ class Settings {
       vapidPublic: '',
       main: {
         apiKey: '',
-        applicationTitle: 'Seerr',
+        applicationTitle: 'Noahflix',
         applicationUrl: '',
         cacheImages: false,
         defaultPermissions: Permission.REQUEST,
@@ -473,7 +473,7 @@ class Settings {
               ignoreTls: false,
               requireTls: false,
               allowSelfSigned: false,
-              senderName: 'Seerr',
+              senderName: 'Noahflix',
               usePublicLogo: false,
             },
           },
