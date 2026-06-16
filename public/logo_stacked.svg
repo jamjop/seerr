@@ -1,9 +1,11 @@
-<svg width="198" height="170" viewBox="0 0 198 170" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="240" height="155" viewBox="0 0 240 155" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g transform="translate(21, 0)">
 <circle cx="103" cy="52" r="28" fill="#131928"/>
 <path fill-rule="evenodd" clip-rule="evenodd" d="M99 96C125.51 96 147 74.5097 147 48C147 21.4903 125.51 0 99 0C72.4903 0 51 21.4903 51 48C51 74.5097 72.4903 96 99 96ZM131 52C131 67.464 118.464 80 103 80C87.5361 80 75.0001 67.464 75.0001 52C75.0001 49.1303 75.4318 46.3615 76.2338 43.7548C78.4288 48.6165 83.3194 52 89.0001 52C96.7321 52 103 45.732 103 38C103 32.3192 99.6166 27.4287 94.755 25.2337C97.3616 24.4317 100.13 24 103 24C118.464 24 131 36.536 131 52Z" fill="url(#paint0_linear_311_206)"/>
 <path opacity="0.2" fill-rule="evenodd" clip-rule="evenodd" d="M131 52C131 67.464 118.464 80 103 80C87.864 80 75.5329 67.9897 75.017 52.9791C75.0057 53.318 75 53.6584 75 54C75 70.5686 88.4315 84 105 84C121.569 84 135 70.5686 135 54C135 37.4315 121.569 24 105 24C104.66 24 104.321 24.0057 103.983 24.0169C118.992 24.5347 131 36.865 131 52Z" fill="#131928"/>
 <path fill-rule="evenodd" clip-rule="evenodd" d="M99 12C79.1177 12 63 28.1177 63 48C63 50.2091 61.2091 52 59 52C56.7909 52 55 50.2091 55 48C55 23.6995 74.6995 4 99 4C101.209 4 103 5.79086 103 8C103 10.2091 101.209 12 99 12Z" fill="url(#paint1_linear_311_206)"/>
-<text x="99" y="165" text-anchor="middle" fill="white" font-family="Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="64" font-weight="700" textLength="192" lengthAdjust="spacingAndGlyphs">Noahflix</text>
+</g>
+<text x="120" y="145" text-anchor="middle" fill="white" font-family="Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif" font-size="44" font-weight="700">Noahflix</text>
 <defs>
 <linearGradient id="paint0_linear_311_206" x1="99" y1="-2.07126e-06" x2="168.5" y2="69.5" gradientUnits="userSpaceOnUse">
 <stop stop-color="#C395FC"/>
