@@ -782,7 +782,7 @@ authRoutes.post('/reset-password/:guid', authRateLimit, async (req, res, next) =
   }
 
   const user = await userRepository.findOne({
-    where: { resetPasswordGuid: req.params.guid },
+    where: { resetPasswordGuid: String(req.params.guid) },
   });
 
   if (!user) {
