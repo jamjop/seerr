@@ -1,0 +1,27 @@
+version: 2
+updates:
+  # Standalone Docusaurus documentation site generator -- not built or run
+  # as part of the deployed app (confirmed not referenced anywhere in the
+  # Dockerfile or compose config). Low blast radius if a bump ever breaks
+  # something, so it can take proactive weekly version-update PRs instead
+  # of just security-only alerts.
+  - package-ecosystem: "npm"
+    directory: "/gen-docs"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "gen-docs"
+
+  # Standalone maintenance script (media-request duplicate detection via
+  # @huggingface/transformers) -- same reasoning as gen-docs, not part of
+  # the deployed app.
+  - package-ecosystem: "npm"
+    directory: "/bin/duplicate-detector"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "duplicate-detector"
