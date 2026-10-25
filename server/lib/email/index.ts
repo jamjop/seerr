@@ -88,7 +88,10 @@ class PreparedEmail extends Email {
         },
       },
       send: true,
-      transport: transport,
+      // nodemailer 10 ships its own types; @types/email-templates still expects the older @types/nodemailer shapes
+      transport: transport as unknown as NonNullable<
+        ConstructorParameters<typeof Email>[0]
+      >['transport'],
       preview: false,
     });
   }
